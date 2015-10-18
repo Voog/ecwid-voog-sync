@@ -1,0 +1,56 @@
+AllCops:
+  Exclude:
+    - bin/**
+    - config/boot.rb
+    - db/schema.rb
+
+Lint/EndAlignment:
+  AlignWith: variable
+
+Metrics/AbcSize:
+  Max: 38
+  Exclude:
+    - app/models/synchronizer.rb
+
+Metrics/CyclomaticComplexity:
+  Max: 7
+  Exclude:
+    - app/models/synchronizer.rb
+
+Metrics/PerceivedComplexity:
+  Max: 8
+  Exclude:
+    - app/models/synchronizer.rb
+
+Metrics/LineLength:
+  Max: 166
+
+Metrics/ClassLength:
+  Max: 200
+
+Metrics/MethodLength:
+  Max: 26
+  Exclude:
+    - app/models/synchronizer.rb
+
+Style/Documentation:
+  Enabled: false
+
+Style/SpaceInsideHashLiteralBraces:
+  Enabled: false
+
+Style/ConstantName:
+  Enabled: false
+
+Style/GuardClause:
+  Enabled: false
+
+Style/AccessorMethodName:
+  Enabled: false
+
+Style/RegexpLiteral:
+  Enabled: false
+
+Metrics/BlockNesting:
+  Exclude:
+    - app/controllers/ecwid_webhooks_controller.rb

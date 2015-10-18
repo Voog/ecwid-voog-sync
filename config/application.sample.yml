@@ -1,0 +1,19 @@
+default: &default
+  EV_SYNC_ECWID_SHOP_ID: "ECWID_SHOP_ID"
+
+development:
+  <<: *default
+  EV_SYNC_ECWID_API3_ACCESS_TOKEN: "ECWID_API_TOKEN" # "scope":"read_store_profile read_catalog" - read more: http://api.ecwid.com/#get-access-token
+  EV_SYNC_VOOG_HOST: "my-store-page.voog.com"
+  EV_SYNC_VOOG_API_TOKEN: "VOOG_API_TOKEN"
+  EV_SYNC_VOOG_PRODUCTS_LAYOUT_NAME: "Products listing"
+  EV_SYNC_VOOG_PRODUCTS_ELEMENT_DEFINITION: "Products"
+  EV_SYNC_VOOG_PRODUCTS_PARENT_PATH: "en"  
+
+production:
+  <<: *default
+  EV_SYNC_ECWID_API3_ACCESS_TOKEN: ""
+
+test:
+  <<: *default
+  EV_SYNC_ECWID_API3_ACCESS_TOKEN: ""

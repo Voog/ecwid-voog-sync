@@ -1,0 +1,17 @@
+# Ignore bundler config.
+/.bundle
+
+# Ignore all logfiles and tempfiles.
+/log/*
+!/log/.keep
+/tmp
+!/tmp/.gitkeep
+/config/application.yml
+/config/application.production.yml
+/config/database.yml
+/config/database.production.yml
+.ruby-gemset
+.tm_properties
+/config/deploy/*
+!/config/deploy/example_app*
+/custom*
