@@ -2,7 +2,7 @@
 lock '3.4.0'
 
 set :application, 'ecwid_voog_sync'
-set :repo_url, 'https://github.com/Voog/ecwid_voog_sync.git'
+set :repo_url, 'https://github.com/Voog/ecwid-voog-sync.git'
 set :branch, (ENV['BRANCH'] || :master)
 
 set :ssh_options, forward_agent: true

@@ -1,6 +1,6 @@
 # Ecwid Store to Voog CMS synchronizer
 
-This [Ruby on Rail](http://rubyonrails.org/) based application deals with products synchronization between [Ecwid](http://ecwid.com/).) Store and [Voog CMS](http://www.voog.com/).
+This [Ruby on Rail](http://rubyonrails.org/) based application deals with products synchronization between [Ecwid](http://ecwid.com/). Store and [Voog CMS](http://www.voog.com/).
 
 Original store data is fetched from Ecwid using [Ecwid API v3](http://api.ecwid.com/).
 
@@ -12,7 +12,7 @@ Synced products data setup is using [Voog database tool](http://www.voog.com/sup
 
 Every product category is a [elements page](http://www.voog.com/developers/api/resources/pages) in Voog.
 
-Some aditional attributes are stored to category page using [Voog custom data field](http://www.voog.com/developers/templating/javascripts/customdata):
+Some additional attributes are stored to category page using [Voog custom data field](http://www.voog.com/developers/templating/javascripts/customdata):
 
 * `is_category` - value `true`.
 * `external_category_id` - value is category id of the Ecwid.
@@ -208,8 +208,22 @@ bundle exec cap my_shop:production deploy
 ```
 
 Deploy sript supports [RVM](https://rvm.io/) and [RBENV](https://github.com/sstephenson/rbenv) Ruby managers.
-RBENV is assumed as default. When you use RVM in servers side, then you need to add additional environment variable to your deploy command:
+RBENV is used by default. When you use RVM in servers side, then you need to add additional environment variable to your deploy command:
 
 ```
 CAP_USE_RVM=true bundle exec cap my_shop:production check_write_permissions
 ```
+
+## Synchronization
+
+Products and product categories are updated periodically using cron task. See details in (see [config/schedule.rb](./config/schedule.rb) file.
+
+Products update check interval is 5 minutes, but products are updated only when something has been changed. Changes is detected by using cached information about last update and [Ecwid store update statistics endpoint](http://api.ecwid.com/#get-store-update-statistics).
+
+Produt is synchronized only when it has been changed.
+
+Once per day full synch is performed.
+
+### Webhooks
+
+This application supports also Ecwid webhooks to instantly synchronize updated and deleted products. Read more about how to [setup webhooks for Ecwid](http://api.ecwid.com/#what-is-webhook).
