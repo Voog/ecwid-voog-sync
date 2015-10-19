@@ -8,11 +8,12 @@ development:
   EV_SYNC_VOOG_API_TOKEN: "VOOG_API_TOKEN"
   EV_SYNC_VOOG_PRODUCTS_LAYOUT_NAME: "Products listing"
   EV_SYNC_VOOG_PRODUCTS_ELEMENT_DEFINITION: "Products"
-  EV_SYNC_VOOG_PRODUCTS_PARENT_PATH: "en"  
+  EV_SYNC_VOOG_PRODUCTS_PARENT_PATH: "en"
 
 production:
   <<: *default
   EV_SYNC_ECWID_API3_ACCESS_TOKEN: ""
+  EV_SYNC_SECRET_KEY_BASE: "long-random-string-3274y23472384y237842y73hwerbhjwfbjhsdbfsygf7r3gfsajdjd6"
 
 test:
   <<: *default

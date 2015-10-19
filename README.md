@@ -99,6 +99,7 @@ Minimum set of environmental variables for production environment:
 
 * `EV_SYNC_ECWID_SHOP_ID="My eShop"`
 * `EV_SYNC_ECWID_API3_ACCESS_TOKEN=ECWID_API_TOKEN` - ("scope":"read_store_profile create_orders read_catalog read_discount_coupons")
+* `EV_SYNC_SECRET_KEY_BASE="long-random-string-3274y23472384y237842y73hwerbhjwfbjhsdbfsygf7r3gfsajdjd6"`
 * `EV_SYNC_VOOG_HOST="my-store-page.voog.com"`
 * `EV_SYNC_VOOG_API_TOKEN="VOOG-API-TOKEN"`
 * `EV_SYNC_VOOG_PRODUCTS_LAYOUT_NAME="Products listing"`
