@@ -28,7 +28,8 @@ Expected [element definition for product element in Voog](http://www.voog.com/de
 * `description` (data_type: `text`) - product price in Ecwid.
 * `options` (data_type: `text`) - product options in Ecwid.
 * `combinations` (data_type: `text`) - product combinations in Ecwid.
-* `original_image_url` (data_type: `string`) - product image url in Ecwid.
+* `image_url` (data_type: `string`) - product image url in Ecwid.
+* `original_image_url` (data_type: `string`) - product original image url in Ecwid.
 
 Product element definition can be created either manually or using [Voog Element definitions API](http://www.voog.com/developers/api/resources/element_definitions#create_element_definition):
 
@@ -67,22 +68,28 @@ Product element definition can be created either manually or using [Voog Element
       "position": 5
     },
     {
-      "key": "original_image_url",
+      "key": "image_url",
       "title": "Product image url",
       "data_type": "string",
       "position": 6
     },
     {
+      "key": "original_image_url",
+      "title": "Product original image url",
+      "data_type": "string",
+      "position": 7
+    },
+    {
       "key": "options",
       "title": "Product options",
       "data_type": "text",
-      "position": 7
+      "position": 8
     },
     {
       "key": "combinations",
       "title": "combinations",
       "data_type": "text",
-      "position": 8
+      "position": 9
     }
   ]
 }

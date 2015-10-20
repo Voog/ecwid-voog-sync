@@ -172,6 +172,7 @@ module ApiParser
           description: data.description,
           options: data.options.to_json,
           combinations: data.to_hash['combinations'].to_json,
+          image_url: data.image_url,
           original_image_url: data.original_image_url,
           external_category_id: category.ecwid_id
         }
