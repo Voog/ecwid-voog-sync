@@ -2,7 +2,7 @@
 set :output, '/var/rails/ecwid_voog_sync/current/log/cron_log.log'
 
 # Sync data once per 5 min
-every '5 0-4,6-23 * * *' do
+every '*/5 0-4,6-23 * * *' do
   rake 'ecwid_voog_sync:sync'
 end
 
