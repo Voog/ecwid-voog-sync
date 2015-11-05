@@ -44,7 +44,7 @@ class Synchronizer
       # Hide all hidden and removed categories in Voog.
       Category.where(ecwid_enabled: false, voog_enabled: true).where.not(voog_page_id: ['', nil]).each do |category|
         update_category(category, forced_update: true)
-        increment_request_counter
+        increment_request_counter!
       end
 
       # Ensure that categories are in same order in Ecwid and Voog.
@@ -207,7 +207,7 @@ class Synchronizer
             target_id = products.detect { |p| p.id == common_products[index - 1] }.try(:voog_element_id)
             @voog_api.move_element(product, after: target_id)
           end
-          increment_request_counter
+          increment_request_counter!
         end
       end
     end
