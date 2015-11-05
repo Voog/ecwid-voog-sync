@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151012132918) do
+ActiveRecord::Schema.define(version: 20151105135556) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,7 +38,7 @@ ActiveRecord::Schema.define(version: 20151012132918) do
     t.string   "name"
     t.string   "voog_element_id"
     t.string   "ecwid_id"
-    t.string   "ecwid_catrgory_id"
+    t.string   "ecwid_category_id"
     t.boolean  "enabled",           default: false
     t.datetime "ecwid_synced_at"
     t.datetime "voog_synced_at"
@@ -46,7 +46,7 @@ ActiveRecord::Schema.define(version: 20151012132918) do
     t.datetime "updated_at",                        null: false
   end
 
-  add_index "products", ["ecwid_catrgory_id"], name: "index_products_on_ecwid_catrgory_id", using: :btree
+  add_index "products", ["ecwid_category_id"], name: "index_products_on_ecwid_category_id", using: :btree
   add_index "products", ["ecwid_id"], name: "index_products_on_ecwid_id", using: :btree
   add_index "products", ["voog_element_id"], name: "index_products_on_voog_element_id", using: :btree
 

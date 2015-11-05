@@ -99,7 +99,7 @@ class Synchronizer
             @request_counter += 1
             product.attributes = {
               name: product_data.name,
-              ecwid_catrgory_id: category_id,
+              ecwid_category_id: category_id,
               enabled: product_data.enabled,
               ecwid_synced_at: Time.now
             }
@@ -120,7 +120,7 @@ class Synchronizer
       end
 
       # Remove product from removed categories
-      Product.where(ecwid_id: product_data.id).where.not(ecwid_catrgory_id: product_data.category_ids, voog_element_id: ['', nil]).each do |product|
+      Product.where(ecwid_id: product_data.id).where.not(ecwid_category_id: product_data.category_ids, voog_element_id: ['', nil]).each do |product|
         @voog_api.delete_element(product.voog_element_id)
         product.delete
         increment_request_counter!

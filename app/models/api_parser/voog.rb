@@ -137,7 +137,7 @@ module ApiParser
     def cache_products!
       paginated(:elements, include_values: true, 'q.element_definition.title' => EcwidVoogSync::Application.config.app.voog.products_element_definition).map do |e|
         if e.values.external_id.present? && e.values.external_category_id.present?
-          product = Product.find_or_initialize_by(ecwid_catrgory_id: e.values.external_category_id, voog_element_id: e.id)
+          product = Product.find_or_initialize_by(ecwid_category_id: e.values.external_category_id, voog_element_id: e.id)
           product.attributes = {
             ecwid_id: e.values.external_id,
             voog_synced_at: Time.now

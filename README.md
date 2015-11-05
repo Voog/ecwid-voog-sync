@@ -1,6 +1,6 @@
 # Ecwid Store to Voog CMS synchronizer
 
-This [Ruby on Rail](http://rubyonrails.org/) based application deals with products synchronization between [Ecwid](http://ecwid.com/). Store and [Voog CMS](http://www.voog.com/).
+This [Ruby on Rails](http://rubyonrails.org/) based application deals with products synchronization between [Ecwid](http://ecwid.com/). Store and [Voog CMS](http://www.voog.com/).
 
 Original store data is fetched from Ecwid using [Ecwid API v3](http://api.ecwid.com/).
 
