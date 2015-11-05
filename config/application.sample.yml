@@ -1,5 +1,6 @@
 default: &default
   EV_SYNC_ECWID_SHOP_ID: "ECWID_SHOP_ID"
+  EV_SYNC_ECWID_PRODUCTS_DEFAULT_ORDER: "ADDED_TIME_ASC"
 
 development:
   <<: *default

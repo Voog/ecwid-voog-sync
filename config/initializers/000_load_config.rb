@@ -13,6 +13,8 @@ EcwidVoogSync::Application.configure do
   config.app.ecwid.shop_id = ENV['EV_SYNC_ECWID_SHOP_ID'].presence
   config.app.ecwid.api3_access_token = ENV['EV_SYNC_ECWID_API3_ACCESS_TOKEN'].presence
   config.app.ecwid.api3_api_enabled = config.app.ecwid.shop_id.present? && config.app.ecwid.api3_access_token.present?
+  # Set default sorting order for products. Read more: http://api.ecwid.com/#search-products
+  config.app.ecwid.products_default_order = ENV['EV_SYNC_ECWID_PRODUCTS_DEFAULT_ORDER'].presence || 'RELEVANCE'
 
   # Voog API (http://www.voog.com/developers/api)
   config.app.voog = OpenStruct.new(

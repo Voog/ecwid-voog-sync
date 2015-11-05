@@ -81,6 +81,12 @@ module ApiParser
       create_new_element(category)
     end
 
+    # Reorder category pages in Voog
+    def move_page(category, position)
+      client.move_node(category.voog_node_id, {parent_id: products_parent_page.node.id, position: position}) if category.try(:voog_node_id).present?
+    rescue Faraday::ResourceNotFound
+    end
+
     # Create or update element in Voog CMS
     def push_element_to_server!(category, product, data)
       product.voog_element_id = if product.voog_element_id.present?
@@ -115,13 +121,20 @@ module ApiParser
       nil
     end
 
+    # Reorder element pages in Voog
+    def move_element(product, params)
+      client.move_element(product.voog_element_id, {page_id: product.category.voog_page_id}.merge(params)) if product.voog_element_id.present?
+    rescue Faraday::ResourceNotFound
+    end
+
     # Fetch categories data from Voog CMS and cache them.
     def cache_categories!
-      paginated(:pages, 'q.page.content_type' => 'elements', 'q.page.layout_id' => layout_for_products.id).map do |p|
+      paginated(:pages, 'q.page.content_type' => 'elements', 'q.page.layout_id' => layout_for_products.id, 'q.node.parent_id' => products_parent_page.node.id, 's' => 'node.position').map do |p|
         if p.data.external_category_id.present?
           category = Category.find_or_initialize_by(ecwid_id: p.data.external_category_id)
           category.attributes = {
             voog_page_id: p.id,
+            voog_node_id: p.node.id,
             voog_enabled: !p.hidden,
             voog_synced_at: Time.now
           }
@@ -140,6 +153,7 @@ module ApiParser
           product = Product.find_or_initialize_by(ecwid_category_id: e.values.external_category_id, voog_element_id: e.id)
           product.attributes = {
             ecwid_id: e.values.external_id,
+            voog_position: e.position,
             voog_synced_at: Time.now
           }
           product if product.save

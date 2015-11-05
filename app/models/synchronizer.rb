@@ -9,6 +9,7 @@ class Synchronizer
     @ecwid_api = ApiParser::Ecwid.new
     @voog_api = ApiParser::Voog.new
     @request_counter = 0
+    @ecwid_category_products = HashWithIndifferentAccess.new { |h, k| h[k] = [] }
   end
 
   # Sync data between Ecwid and Voog
@@ -25,6 +26,8 @@ class Synchronizer
       fetch_products_from_voog!
       synchronize_all_products!(options)
     end
+
+    sync_products_order! if forced_update
   end
 
   # Refresh cached categories data from Ecwid and Voog when last sync was more than day ago.
@@ -43,6 +46,9 @@ class Synchronizer
         update_category(category, forced_update: true)
         increment_request_counter
       end
+
+      # Ensure that categories are in same order in Ecwid and Voog.
+      sync_categories_order!(categories_in_ecwid, categories_in_voog)
     end
   end
 
@@ -52,7 +58,7 @@ class Synchronizer
   def synchronize_all_products!(options = {})
     existing_product_ids = []
 
-    @ecwid_api.client.products.all.each do |p|
+    @ecwid_api.all_products.each do |p|
       if p.enabled
         existing_product_ids << p.id
         sync_product(p, options)
@@ -95,6 +101,9 @@ class Synchronizer
           # Ensure that category is exists in Voog CMS.
           update_category(category)
           product = category.products.find_or_create_by(ecwid_id: product_data.id)
+          # Cache products order in Ecwid by category
+          @ecwid_category_products[category_id] << product.id
+
           if forced_update || product.ecwid_synced_at.blank? || product.voog_synced_at.blank? || product.ecwid_synced_at < product_data.updated
             @request_counter += 1
             product.attributes = {
@@ -168,5 +177,39 @@ class Synchronizer
 
   def all_categories
     @all_categories ||= Category.all
+  end
+
+  # Ensure that categories order in Ecwid and Voog are same.
+  # Input waits arrays of category ids as arguments.
+  def sync_categories_order!(categories_in_ecwid, categories_in_voog)
+    common_categories = categories_in_ecwid & categories_in_voog
+    if common_categories.zip(categories_in_voog & categories_in_ecwid).any? { |e, v| e != v }
+      common_categories.each.with_index(1) do |id, index|
+        @voog_api.move_page(Category.find_by_id(id), index)
+      end
+    end
+  end
+
+  # Ensure that products order in Ecwid and Voog are same.
+  def sync_products_order!
+    @ecwid_category_products.each do |ecwid_category_id, products_in_ecwid|
+      products = Product.where(ecwid_category_id: ecwid_category_id, id: products_in_ecwid).includes(:category)
+      products_in_voog = products.sort { |a, b| a.voog_position.to_i <=> b.voog_position.to_i}.map(&:id)
+      common_products = products_in_ecwid & products_in_voog
+
+      if common_products.size > 1 && common_products.zip(products_in_voog & products_in_ecwid).any? { |e, v| e != v }
+        common_products.each_with_index do |id, index|
+          product = products.detect { |p| p.id == id }
+          if index == 0
+            target_id = products.detect { |p| p.id == common_products[index + 1] }.try(:voog_element_id)
+            @voog_api.move_element(product, before: target_id)
+          else
+            target_id = products.detect { |p| p.id == common_products[index - 1] }.try(:voog_element_id)
+            @voog_api.move_element(product, after: target_id)
+          end
+          increment_request_counter
+        end
+      end
+    end
   end
 end

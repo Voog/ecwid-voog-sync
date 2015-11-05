@@ -7,7 +7,7 @@ module ApiParser
     end
 
     def cache_categories!
-      client.categories.all(hidden_categories: true).map do |c|
+      client.categories.all(hidden_categories: true, sortBy: EcwidVoogSync::Application.config.app.ecwid.products_default_order).map do |c|
         category = Category.find_or_initialize_by(ecwid_id: c.id)
         category.attributes = {
           name: c.name,
@@ -20,7 +20,7 @@ module ApiParser
     end
 
     def all_products
-      client.products.all
+      client.products.all(sortBy: EcwidVoogSync::Application.config.app.ecwid.products_default_order)
     end
 
     def last_product_update
