@@ -34,18 +34,18 @@ class Synchronizer
   # Parameters:
   #   forced_update - forced update (default false)
   def sync_categories!(options = {})
-    if options.fetch(:forced_update, false) || last_categories_sync.blank? || last_categories_sync < Time.now - 1.day
+    if options.fetch(:forced_update, false) || options.fetch(:sync_order, false) || last_categories_sync.blank? || last_categories_sync < Time.now - 1.day
       categories_in_ecwid = @ecwid_api.cache_categories!.map(&:id)
-      Category.where.not(id: categories_in_ecwid).update_all(ecwid_enabled: false)
+      Category.where.not(id: categories_in_ecwid).update_all(ecwid_enabled: false) unless options[:sync_order]
 
       categories_in_voog = @voog_api.cache_categories!.map(&:id)
-      Category.where.not(id: categories_in_voog).update_all(voog_page_id: nil)
+      Category.where.not(id: categories_in_voog).update_all(voog_page_id: nil) unless options[:sync_order]
 
       # Hide all hidden and removed categories in Voog.
       Category.where(ecwid_enabled: false, voog_enabled: true).where.not(voog_page_id: ['', nil]).each do |category|
         update_category(category, forced_update: true)
         increment_request_counter!
-      end
+      end unless options[:sync_order]
 
       # Ensure that categories are in same order in Ecwid and Voog.
       sync_categories_order!(categories_in_ecwid, categories_in_voog)
@@ -165,12 +165,16 @@ class Synchronizer
 
   def update_category(category, options = {})
     result = @voog_api.push_category_to_server!(category, options)
+    # Process when category has added or updated.
     if result
       category.voog_page_id = result.id
+      category.voog_node_id = result.node.id
       category.voog_enabled = !result.hidden
       category.voog_synced_at = Time.now
       category.save
 
+      # Re-sync categories and their order after update - ignore in case of forced_update since it is already synced.
+      sync_categories!(sync_order: true) unless options[:forced_update]
       all_categories.reload
     end
   end
