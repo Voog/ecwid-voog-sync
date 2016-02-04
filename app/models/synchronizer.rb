@@ -151,7 +151,7 @@ class Synchronizer
       if Product.where(ecwid_synced_at: nil).exists?
         ''
       else
-        Product.minimum(:ecwid_synced_at)
+        Product.maximum(:ecwid_synced_at)
       end
     end
   end
